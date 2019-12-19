@@ -51,10 +51,24 @@ export default {
   },
   methods: {
     submitLogin () {
-      this.$refs.myform.validate(function (isOK) {
+      this.$refs.myform.validate((isOK) => {
         if (isOK) {
           // 发送请求
-          console.log('校验成功')
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.loginForm
+          }).then(res => {
+            console.log(res)
+
+            window.localStorage.setItem('user-token', res.data.data.token)
+            this.$router.push('/Home')
+          }).catch(() => {
+            this.$message({
+              message: '手机号或密码输入错误',
+              type: 'warning'
+            })
+          })
         }
       })
     }
