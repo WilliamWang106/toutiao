@@ -59,8 +59,7 @@ export default {
             method: 'post',
             data: this.loginForm
           }).then(res => {
-            console.log(res)
-
+            // console.log(res)
             window.localStorage.setItem('user-token', res.data.data.token)
             this.$router.push('/Home')
           }).catch(() => {
