@@ -8,14 +8,14 @@
       <el-row type="flex" justify="end" align="middle">
           <img :src="userInfo.photo ? userInfo.photo : defaultImg" alt="">
           <!-- 设置默认头像  用三元表达式  如果有头像就显示头像  如果没有头像 将默认头像的地址转换成变量传入 -->
-          <el-dropdown>
+          <el-dropdown @command='clickDrop'>
               <!-- 匿名插槽 -->
               <span>{{userInfo.name}}</span>
               <!-- 具名插槽 -->
               <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>用户信息</el-dropdown-item>
-                  <el-dropdown-item>git地址</el-dropdown-item>
-                  <el-dropdown-item>退出 </el-dropdown-item>
+                  <el-dropdown-item command='userInfos'>用户信息</el-dropdown-item>
+                  <el-dropdown-item command='git'>git地址</el-dropdown-item>
+                  <el-dropdown-item command='lgout'>退出 </el-dropdown-item>
               </el-dropdown-menu>
           </el-dropdown>
       </el-row>
@@ -43,6 +43,19 @@ export default {
     }).then(res => {
       this.userInfo = res.data.data
     })
+  },
+  methods: {
+    clickDrop (command) {
+      if (command === 'userInfos') {
+        // 显示信息
+      } else if (command === 'git') {
+        window.location.href = 'https://github.com/opendigg/awesome-github-vue'
+      } else {
+        // 删除令牌
+        window.localStorage.removeItem('user-token')
+        this.$router.push('/Login')
+      }
+    }
   }
 }
 </script>
