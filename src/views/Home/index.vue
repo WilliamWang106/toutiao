@@ -11,7 +11,7 @@
         <layout-head></layout-head>
       </el-header>
       <!-- 右侧的下边容器 -->
-      <el-main>主要</el-main>
+      <router-view></router-view>
     </el-container>
   </el-container>
 </template>
