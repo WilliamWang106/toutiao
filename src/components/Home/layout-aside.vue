@@ -3,6 +3,7 @@
       <div class="title">
           <img src="../../assets/img/logo_admin.png" alt="">
       </div>
+      <!-- 加router  开启路由  通过index设置路由跳转以及  选择 -->
     <el-menu router background-color="#353b4e" text-color='#adafb5' active-text-color="#ffd04b">
       <!-- 一级导航栏 没有下拉选项 -->
       <el-menu-item index='/Home'>首页</el-menu-item>
