@@ -6,10 +6,11 @@
     </el-col>
     <el-col class="right" :span="12">
       <el-row type="flex" justify="end" align="middle">
-          <img src="../../assets/img/icons.png" alt="">
+          <img :src="userInfo.photo ? userInfo.photo : defaultImg" alt="">
+          <!-- 设置默认头像  用三元表达式  如果有头像就显示头像  如果没有头像 将默认头像的地址转换成变量传入 -->
           <el-dropdown>
               <!-- 匿名插槽 -->
-              <span>用户名</span>
+              <span>{{userInfo.name}}</span>
               <!-- 具名插槽 -->
               <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>用户信息</el-dropdown-item>
@@ -23,7 +24,27 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      userInfo: {},
+      defaultImg: require('../../assets/img/loginImg.jpg') // 将图片引用过来 转换成变量 用require  （图片要做动态转换时）
+    }
+  },
+  // 发送请求 获取数据  没有参数 但是要在头上设置  Bearer加空格加token的值
+  // 返回的数据为对象，直接赋值给data中准备好的对象
+  created () {
+    let token = localStorage.getItem('user-token')
+    this.$axios({
+      url: '/user/profile',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(res => {
+      this.userInfo = res.data.data
+    })
+  }
+}
 </script>
 
 <style lang='less' scoped>
