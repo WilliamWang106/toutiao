@@ -34,12 +34,8 @@ export default {
   // 发送请求 获取数据  没有参数 但是要在头上设置  Bearer加空格加token的值
   // 返回的数据为对象，直接赋值给data中准备好的对象
   created () {
-    let token = localStorage.getItem('user-token')
     this.$axios({
-      url: '/user/profile',
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      url: '/user/profile'
     }).then(res => {
       this.userInfo = res.data.data
     })

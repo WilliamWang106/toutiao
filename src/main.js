@@ -5,7 +5,7 @@ import router from './router'
 import ElementUI from 'element-ui' // 引入element-ui
 import 'element-ui/lib/theme-chalk/index.css' // 引入样式
 import './styles/index.less'
-import axios from 'axios'
+import axios from './utils/request'
 import components from './components'
 
 Vue.config.productionTip = false
