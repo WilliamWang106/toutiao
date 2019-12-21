@@ -60,7 +60,7 @@ export default {
             data: this.loginForm
           }).then(res => {
             // console.log(res)
-            window.localStorage.setItem('user-token', res.data.data.token)
+            window.localStorage.setItem('user-token', res.data.token)
             this.$router.push('/home')
           }).catch(() => {
             // elementUI提供的  消息提示框的写法

@@ -11,7 +11,7 @@ import components from './components'
 Vue.config.productionTip = false
 Vue.use(ElementUI) // 使用ElementUI
 Vue.use(components) // 注册component的全局组件
-axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
+
 Vue.prototype.$axios = axios
 
 new Vue({
