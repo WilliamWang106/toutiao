@@ -38,8 +38,8 @@ export default {}
 <style lang='less' scoped>
 .layout-aside{
     width: 200px;
-    height: 100vh;
-    background-color:  #323745;
+    // min-height: 100vh;
+    // background-color:  #323745;
     .title{
         background-color: #2e2f32;
         height: 60px;
