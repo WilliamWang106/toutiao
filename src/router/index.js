@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home'
 import Login from '../views/Login'
 import Home2 from '../views/Home/home.vue'
+// import comment from '../views/comment'
 
 Vue.use(VueRouter)
 
@@ -15,7 +16,9 @@ const routes = [
     path: '/home',
     component: Home,
     children: [
-      { path: '', component: Home2 }
+      { path: '', component: Home2 },
+      { path: '/home/comment', component: () => import('../views/comment') }
+      // { path: '/home/comment', component: comment }   按需加载 换一种写法
     ]
   },
   {
