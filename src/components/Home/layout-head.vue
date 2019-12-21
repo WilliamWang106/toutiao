@@ -53,7 +53,7 @@ export default {
       } else {
         // 删除令牌
         window.localStorage.removeItem('user-token')
-        this.$router.push('/Login')
+        this.$router.push('/login')
       }
     }
   }

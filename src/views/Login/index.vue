@@ -61,8 +61,9 @@ export default {
           }).then(res => {
             // console.log(res)
             window.localStorage.setItem('user-token', res.data.data.token)
-            this.$router.push('/Home')
+            this.$router.push('/home')
           }).catch(() => {
+            // elementUI提供的  消息提示框的写法
             this.$message({
               message: '手机号或密码输入错误',
               type: 'warning'
