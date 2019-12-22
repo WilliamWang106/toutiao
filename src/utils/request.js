@@ -1,7 +1,8 @@
-// 请求拦截  token统一处理
+// 请求拦截  token统一处理   处理axios的文件
 import axios from 'axios'
 import VueRouter from 'vue-router'
 import { Message } from 'element-ui'
+import jsonBigInt from 'json-bigint'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 
 // 请求拦截器
@@ -10,6 +11,10 @@ axios.interceptors.request.use(function (config) {
   config.headers.Authorization = `Bearer ${token}`
   return config
 })
+
+axios.defaults.transformResponse = [function (data) {
+  return jsonBigInt.parse(data)
+}]
 
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
@@ -38,5 +43,7 @@ axios.interceptors.response.use(function (response) {
       break
   }
   Message({ type: 'warning', message })
+  // 错误执行函数如果不做任何操作   还会进入promis  then中
+  return Promise.reject(error)
 })
 export default axios

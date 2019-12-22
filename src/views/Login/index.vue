@@ -26,9 +26,9 @@ export default {
   data () {
     return {
       loginForm: {
-        mobile: '',
-        code: '',
-        check: false
+        mobile: '13911111111',
+        code: '246810',
+        check: true
       },
       loginRules: {
         mobile: [
@@ -64,6 +64,8 @@ export default {
             this.$router.push('/home')
           })
           // .catch(() => {
+          // })
+          // .catch(1() => {
           //   // elementUI提供的  消息提示框的写法
           //   this.$message({
           //     message: '手机号或密码输入错误',

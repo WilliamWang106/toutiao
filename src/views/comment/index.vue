@@ -10,7 +10,7 @@
     <!-- 下面写数据 body el-table表格组件-->
     <el-table :data='list'>
       <el-table-column prop='title' label='标题' width='600'></el-table-column>
-      <el-table-column :formatter="commentBealoon" label='评论状态'></el-table-column>
+      <el-table-column :formatter="commentBealoon" prop="comment_status" label='评论状态'></el-table-column>
       <el-table-column prop='total_comment_count' label='总评论数'></el-table-column>
       <el-table-column prop='fans_comment_count' label='粉丝评论数'></el-table-column>
       <el-table-column label='操作'>
@@ -42,7 +42,7 @@ export default {
         this.list = res.data.results
       })
     },
-    commentBealoon (row, column, cellValue, index) {
+    commentBealoon: function (row, column, cellValue, index) {
       return cellValue ? '正常' : '关闭'
     },
     openOrClose (row) {
@@ -51,7 +51,7 @@ export default {
         this.$axios({
           method: 'put',
           url: '/comments/status',
-          params: { article_id: row.id },
+          params: { article_id: row.id.toString() },
           data: { allow_comment: !row.comment_status }
         }).then(res => {
           this.getComment()
