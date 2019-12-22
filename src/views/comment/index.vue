@@ -8,7 +8,7 @@
       </template>
     </bread-crumb>
     <!-- 下面写数据 body el-table表格组件-->
-    <el-table :data='list'>
+    <el-table :data='list' v-loading='loading'>
       <el-table-column prop='title' label='标题' width='600'></el-table-column>
       <el-table-column :formatter="commentBealoon" prop="comment_status" label='评论状态'></el-table-column>
       <el-table-column prop='total_comment_count' label='总评论数'></el-table-column>
@@ -44,7 +44,8 @@ export default {
         pageSize: 10,
         currentPage: 1,
         total: 0
-      }
+      },
+      loading: false
     }
   },
   methods: {
@@ -54,10 +55,12 @@ export default {
       this.getComment()
     },
     getComment () {
+      this.loading = true
       this.$axios({
         url: '/articles',
         params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
       }).then(res => {
+        this.loading = false
         this.list = res.data.results
         this.page.total = res.data.total_count // 总条数
       })
