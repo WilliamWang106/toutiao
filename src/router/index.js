@@ -17,7 +17,8 @@ const routes = [
     component: Home,
     children: [
       { path: '', component: Home2 },
-      { path: '/home/comment', component: () => import('../views/comment') }
+      { path: 'comment', component: () => import('../views/comment') },
+      { path: 'material', component: () => import('../views/material') }
       // { path: '/home/comment', component: comment }   按需加载 换一种写法
     ]
   },
