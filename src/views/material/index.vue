@@ -24,6 +24,18 @@
                 </el-card>
             </div>
         </el-tab-pane>
+        <!-- 分页公共组件 -->
+        <el-row type="flex" justify="center">
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :total="page.total"
+              :page-size='page.pageSize'
+              :current-page="page.currentPage"
+              @current-change='changePage'>
+            </el-pagination>
+
+        </el-row>
         <!-- {{list}} -->
     </el-tabs>
   </el-card>
@@ -34,21 +46,34 @@ export default {
   data () {
     return {
       activeName: 'all',
-      list: []
+      list: [],
+      page: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 8
+      }
     }
   },
   methods: {
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getMaterial()
+    },
     changeTab () {
+      this.page.currentPage = 1
       this.getMaterial()
     },
     getMaterial () {
       this.$axios({
         url: '/user/images',
         params: {
-          collect: this.activeName === 'collect'
+          collect: this.activeName === 'collect',
+          page: this.page.currentPage,
+          per_page: this.page.pageSize
         }
       }).then(res => {
         this.list = res.data.results
+        this.page.total = res.data.total_count
       })
     }
   },
