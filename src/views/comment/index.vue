@@ -22,7 +22,16 @@
 
       </el-table-column>
     </el-table>
-
+    <el-row type="flex" justify="center" align="middle" style="height:60px">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="page.total"
+        :page-size="page.pageSize"
+        :current-page="page.currentPage"
+        @current-change='changePage'>
+      </el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -30,16 +39,27 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      page: {
+        pageSize: 10,
+        currentPage: 1,
+        total: 0
+      }
     }
   },
   methods: {
+    // 页面发生改变
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getComment()
+    },
     getComment () {
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' }
+        params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
       }).then(res => {
         this.list = res.data.results
+        this.page.total = res.data.total_count // 总条数
       })
     },
     commentBealoon: function (row, column, cellValue, index) {
