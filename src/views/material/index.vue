@@ -1,8 +1,17 @@
 <template>
-  <el-card>
+  <el-card v-loading='loadingUpload'>
+    <!-- 卡片头部 -->
     <bread-crumb slot="header">
         <template slot="title">素材管理</template>
     </bread-crumb>
+    <!-- 卡片主体 -->
+    <!-- 上传 -->
+    <el-row type="flex" justify="end">
+      <el-upload action='' :show-file-list='false' :http-request="uploadImg">
+        <el-button size="small" type="primary">上传图片</el-button>
+      </el-upload>
+    </el-row>
+    <!-- tabs图片 -->
     <el-tabs v-model='activeName' @tab-click='changeTab'>
         <el-tab-pane label="全部图片" name="all">
             <!-- 生成页面 -->
@@ -45,6 +54,7 @@
 export default {
   data () {
     return {
+      loadingUpload: false,
       activeName: 'all',
       list: [],
       page: {
@@ -55,6 +65,20 @@ export default {
     }
   },
   methods: {
+    // 上传图片
+    uploadImg (params) {
+      this.loadingUpload = true
+      let data = new FormData()
+      data.append('image', params.file)
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data
+      }).then(res => {
+        this.loadingUpload = false
+        this.getMaterial()
+      })
+    },
     changePage (newPage) {
       this.page.currentPage = newPage
       this.getMaterial()
@@ -111,7 +135,6 @@ export default {
             align-items: center;
             font-size: 20px;
             i{
-
             }
         }
     }
