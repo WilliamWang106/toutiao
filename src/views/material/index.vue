@@ -19,8 +19,8 @@
                 <el-card class="img-card" v-for="item in list" :key='item.id'>
                     <img :src="item.url" alt="">
                     <el-row class="img-icon">
-                        <i class="el-icon-star-on"></i>
-                        <i class="el-icon-delete-solid"></i>
+                        <i @click='collectOrClose(item)' :style="{color: item.is_collected ? 'red':'#000'}" class="el-icon-star-on"></i>
+                        <i @click='deleteImg(item)' class="el-icon-delete-solid"></i>
                     </el-row>
                 </el-card>
             </div>
@@ -65,6 +65,28 @@ export default {
     }
   },
   methods: {
+    // 删除图片
+    deleteImg (item) {
+      this.$confirm('你确定要删除么').then(() => {
+        this.$axios({
+          method: 'delete',
+          url: `/user/images/${item.id}`
+        }).then(() => {
+          this.getMaterial()
+        })
+      })
+    },
+    // 收藏或取消收藏
+    collectOrClose (item) {
+      // item.iscollected true ? 取消收藏 ： 收藏
+      this.$axios({
+        method: 'put',
+        url: `/user/images/${item.id}`,
+        data: { collect: !item.is_collected } // 取反
+      }).then(res => {
+        this.getMaterial()
+      })
+    },
     // 上传图片
     uploadImg (params) {
       this.loadingUpload = true
@@ -79,10 +101,12 @@ export default {
         this.getMaterial()
       })
     },
+    // 分页中切换页面
     changePage (newPage) {
       this.page.currentPage = newPage
       this.getMaterial()
     },
+    // tabs 中切换页签
     changeTab () {
       this.page.currentPage = 1
       this.getMaterial()
@@ -135,6 +159,7 @@ export default {
             align-items: center;
             font-size: 20px;
             i{
+              cursor: pointer;
             }
         }
     }

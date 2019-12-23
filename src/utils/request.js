@@ -13,7 +13,7 @@ axios.interceptors.request.use(function (config) {
 })
 
 axios.defaults.transformResponse = [function (data) {
-  return jsonBigInt.parse(data)
+  return data ? jsonBigInt.parse(data) : {}
 }]
 
 // 响应拦截器
@@ -21,12 +21,15 @@ axios.interceptors.response.use(function (response) {
   // console.log(response)
   return response.data ? response.data : {}
 }, function (error) {
-  let status = error.response.status
+  var status = error.response.status
   let message = ''
   // console.log(error)
   switch (status) {
     case 400:
       message = '请求参数错误'
+      break
+    case 204:
+      message = '图片删除成功'
       break
     case 507:
       message = '服务器数据异常'
