@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card class="articles">
       <bread-crumb slot="header">
        <!-- style="border-bottom: 1px dashed #ccc" -->
         <template slot="title">全部图文</template>
@@ -25,8 +25,25 @@
           <el-form-item label='时间选择：'>
               <el-date-picker type="daterange" v-model="searchForm.dateRange"></el-date-picker>
           </el-form-item>
-          {{searchForm.dateRange}}
+          <!-- {{searchForm.dateRange}} -->
       </el-form>
+      <el-row class="total" type="flex" justify="start" align="middle">
+          <span>共找到10000条符合条件的内容</span>
+      </el-row>
+      <div class="articleItem" v-for="item in 1000" :key='item'>
+          <div class="left">
+              <img src="../../assets/img/toutiao.png" alt="">
+              <div class="info">
+                <span>有没有人测试过标题最长可以多长？？？？？</span>
+                <el-tag class="tag">标签一</el-tag>
+                <span class="date">2019-12-24 20:07:57</span>
+              </div>
+          </div>
+          <div class="right">
+              <span><i class="el-icon-edit"></i>修改</span>
+              <span><i class="el-icon-delete"></i>删除</span>
+          </div>
+      </div>
   </el-card>
 </template>
 
@@ -60,5 +77,50 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.articles{
+    .total{
+     height:60px;
+     border-bottom: 1px dashed #999;
+     margin-bottom: 10px;
+    }
+    .articleItem{
+        display: flex;
+        justify-content: space-between;
+        margin: 20px;
+        border-bottom: 1px solid #f2f3f5;
+        .left{
+            display: flex;
+            img{
+            width: 180px;
+            height: 100px;
+            border-radius: 4px;
+            }
+            .info{
+                display: flex;
+                flex-direction: column;
+                margin-left: 10px;
+                height: 100px;
+                justify-content: space-around;
+                .date{
+                    color: #999;
+                    font-size: 12px;
+                }
+                .tag{
+                    width: 60px;
+                    text-align: center;
+                }
+            }
+
+        }
+        .right{
+            span{
+                font-size: 14px;
+                margin-right: 8px;
+                cursor: pointer;
+            }
+        }
+
+    }
+}
 
 </style>
