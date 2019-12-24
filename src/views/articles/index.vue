@@ -5,9 +5,11 @@
         <template slot="title">全部图文</template>
       </bread-crumb>
       <el-form style="padding-left:50px">
+          <!-- 筛选    组合条件 -->
           <!-- 要双向绑定 -->
           <el-form-item label='文章状态：'>
               <el-radio-group v-model="searchForm.status">
+              <!-- <el-radio-group v-model="searchForm.status" @change="changeCondition"> -->
                   <!-- 放置一个单选组  文章状态，0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除，不传为全部-->
                 <el-radio :label="5">全部</el-radio>
                 <el-radio :label="0">草稿</el-radio>
@@ -18,12 +20,15 @@
           </el-form-item>
           <el-form-item label='频道列表：'>
               <el-select placeholder="请输入频道列表" v-model="searchForm.channel_id">
+              <!-- <el-select placeholder="请输入频道列表" v-model="searchForm.channel_id" @change="changeCondition"> -->
                   <!-- label表示真实的值   value表示id -->
                   <el-option v-for="item in channels" :key='item.id' :label="item.name" :value="item.id"></el-option>
               </el-select>
           </el-form-item>
           <el-form-item label='时间选择：'>
-              <el-date-picker type="daterange" v-model="searchForm.dateRange"></el-date-picker>
+              <!-- 日期选择器  格式问题  标签有value-format='yyyy-MM-dd' -->
+              <el-date-picker value-format="yyyy-MM-dd" type="daterange" v-model="searchForm.dateRange"></el-date-picker>
+              <!-- <el-date-picker value-format="yyyy-MM-dd" type="daterange" v-model="searchForm.dateRange" @change="changeCondition"></el-date-picker> -->
           </el-form-item>
           <!-- {{searchForm.dateRange}} -->
       </el-form>
@@ -64,6 +69,17 @@ export default {
       defaultImd: require('../../assets/img/toutiao.png')
     }
   },
+  watch: {
+    searchForm: {
+      handler: function () {
+      // 此时已经是最新的数据
+        this.changeCondition()
+      },
+      deep: true
+
+    }
+
+  },
   filters: {
     //   参数Value
     filterStatus (value) {
@@ -98,10 +114,23 @@ export default {
     }
   },
   methods: {
+    //   筛选改变条件
+    changeCondition () {
+      let params = {
+        //   因为之前设置的全部等于五 但是发送请求的时候不能写5 所以要进行判断 如果是五的话给它改成null
+        status: this.searchForm.status === 5 ? null : this.searchForm.status,
+        channel_id: this.searchForm.channel_id,
+        begin_pubdate: this.searchForm.dateRange.length ? this.searchForm.dateRange[0] : null,
+        // 不能直接使用  需要写>判断
+        end_pubdate: this.searchForm.dateRange.length > 0 ? this.searchForm.dateRange[1] : null
+      }
+      this.getArticles(params)
+    },
     //   获取文章列表数据
-    getArticles () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params
       }).then(res => {
         this.list = res.data.results
       })
