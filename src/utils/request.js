@@ -7,11 +7,13 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 
 // 请求拦截器
 axios.interceptors.request.use(function (config) {
+  // 注入token
   let token = window.localStorage.getItem('user-token')
   config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
+// 格式
 axios.defaults.transformResponse = [function (data) {
   return data ? jsonBigInt.parse(data) : {}
 }]
