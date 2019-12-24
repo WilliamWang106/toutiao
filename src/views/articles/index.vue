@@ -30,13 +30,16 @@
       <el-row class="total" type="flex" justify="start" align="middle">
           <span>共找到10000条符合条件的内容</span>
       </el-row>
-      <div class="articleItem" v-for="item in 1000" :key='item'>
+      <div class="articleItem" v-for="item in list" :key='item.id.toString()'>
+          <!-- 大数字类型   要用.toString()  拼接成字符串 -->
           <div class="left">
-              <img src="../../assets/img/toutiao.png" alt="">
+              <img :src="item.cover.images.length ? item.cover.images[0] : defaultImd" alt="">
               <div class="info">
-                <span>有没有人测试过标题最长可以多长？？？？？</span>
-                <el-tag class="tag">标签一</el-tag>
-                <span class="date">2019-12-24 20:07:57</span>
+                <span>{{item.title}}</span>
+                <!-- 状态显示的是数字  要把他变成对应的字  可以用过滤器来转变成格式问题 -->
+                <!-- 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除 -->
+                <el-tag :type="item.status | filterType" class="tag">{{item.status | filterStatus}}</el-tag>
+                <span class="date">{{item.pubdate}}</span>
               </div>
           </div>
           <div class="right">
@@ -56,10 +59,54 @@ export default {
         channel_id: null,
         dateRange: []
       },
-      channels: []
+      channels: [],
+      list: [],
+      defaultImd: require('../../assets/img/toutiao.png')
+    }
+  },
+  filters: {
+    //   参数Value
+    filterStatus (value) {
+      // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+      // 要return  一个活的值
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+        default:
+          break
+      }
+    },
+    filterType (value) {
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return ''
+        case 3:
+          return 'danger'
+        default:
+          break
+      }
     }
   },
   methods: {
+    //   获取文章列表数据
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(res => {
+        this.list = res.data.results
+      })
+    },
+    //   获取频道列表数据
     getChannel () {
       this.$axios({
         url: '/channels'
@@ -71,6 +118,8 @@ export default {
   created () {
     //   获取频道列表信息
     this.getChannel()
+    // 获取文章列表数据
+    this.getArticles()
   }
 
 }
