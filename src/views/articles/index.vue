@@ -49,7 +49,7 @@
           </div>
           <div class="right">
               <span><i class="el-icon-edit"></i>修改</span>
-              <span><i class="el-icon-delete"></i>删除</span>
+              <span @click='delAriticle(item.id.toString())'><i class="el-icon-delete"></i>删除</span>
           </div>
       </div>
             <!-- 分页 -->
@@ -127,6 +127,17 @@ export default {
     }
   },
   methods: {
+    // 删除文章
+    delAriticle (id) {
+      this.$confirm('你确定要删除么？').then(() => {
+        this.$axios({
+          url: `/articles/${id}`,
+          method: 'delete'
+        }).then(res => {
+          this.getConditionArticle()
+        })
+      })
+    },
     //   改变页码的方法
     changePage (newPage) {
       this.page.currentPage = newPage
