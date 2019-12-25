@@ -52,6 +52,14 @@
               <span><i class="el-icon-delete"></i>删除</span>
           </div>
       </div>
+            <!-- 分页 -->
+      <el-row type="flex" justify="center" align="middle" style="height:60px">
+          <el-pagination background layout="prev,pager,next"
+          :total="page.total"
+          :current-page="page.currentPage"
+          :page-size="page.pageSize"
+          @current-change='changePage'></el-pagination>
+      </el-row>
   </el-card>
 </template>
 
@@ -66,7 +74,12 @@ export default {
       },
       channels: [],
       list: [],
-      defaultImd: require('../../assets/img/toutiao.png')
+      defaultImd: require('../../assets/img/toutiao.png'),
+      page: {
+        currentPage: 1,
+        total: 0,
+        pageSize: 10
+      }
     }
   },
   watch: {
@@ -114,9 +127,21 @@ export default {
     }
   },
   methods: {
+    //   改变页码的方法
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getConditionArticle()
+    },
     //   筛选改变条件
     changeCondition () {
+      this.page.currentPage = 1 // 强制将页码跳转到第一页
+      this.getConditionArticle()
+    },
+    // 封装相同的部分  改变页码  和筛选相同的参数部分 要进行封装
+    getConditionArticle () {
       let params = {
+        page: this.page.currentPage, // 当前页码
+        per_page: this.page.pageSize,
         //   因为之前设置的全部等于五 但是发送请求的时候不能写5 所以要进行判断 如果是五的话给它改成null
         status: this.searchForm.status === 5 ? null : this.searchForm.status,
         channel_id: this.searchForm.channel_id,
@@ -133,6 +158,7 @@ export default {
         params
       }).then(res => {
         this.list = res.data.results
+        this.page.total = res.data.total_count // 总页数
       })
     },
     //   获取频道列表数据
@@ -148,7 +174,7 @@ export default {
     //   获取频道列表信息
     this.getChannel()
     // 获取文章列表数据
-    this.getArticles()
+    this.getArticles({ page: 1, per_page: 10 })
   }
 
 }
