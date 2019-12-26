@@ -18,7 +18,9 @@
           </template>
         </el-form-item>
         <el-form-item label="封面" prop="cover">
-          <el-radio-group v-model="formDate.cover.type">
+          <!-- 点击切换    一共有两种方式   第一种是监听数据，通过watch   但是会有问题 -->
+          <!-- 第二种是通过组件上的 change事件  绑定一个函数  进行操作 -->
+          <el-radio-group v-model="formDate.cover.type" @change="changeType">
             <!-- 封面类型 -1:自动，0-无图，1-1张，3-3张 -->
             <el-radio :label="-1">单图</el-radio>
             <el-radio :label="3">三图</el-radio>
@@ -72,6 +74,7 @@ export default {
   // 监听   $route:function(to,from){if(to.parmas.articleId)}
   watch: {
     $route: function (to, from) {
+      console.log(to.params.articleId)
       if (to.params.articleId) {
         // 存在 则是修改
       } else {
@@ -89,6 +92,16 @@ export default {
     }
   },
   methods: {
+    // 点击切换  封面
+    changeType () {
+      if (this.formDate.cover.type === 0 || this.formDate.cover.type === -1) {
+        this.formDate.cover.images = [] // 无图或是自动
+      } else if (this.formDate.cover.type === 1) {
+        this.formDate.cover.images = [''] // 一张图
+      } else if (this.formDate.cover.type === 3) {
+        this.formDate.cover.images = ['', '', ''] // 三张图
+      }
+    },
     // 通过ID获取数据
     getArticleById (articleId) {
       this.loading = true
