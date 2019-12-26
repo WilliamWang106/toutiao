@@ -20,17 +20,20 @@
         <el-form-item label="封面" prop="cover">
           <!-- 点击切换    一共有两种方式   第一种是监听数据，通过watch   但是会有问题 -->
           <!-- 第二种是通过组件上的 change事件  绑定一个函数  进行操作 -->
-          <el-radio-group v-model="formDate.cover.type" @change="changeType">
+          <el-radio-group v-model="formDate.cover.type">
             <!-- 封面类型 -1:自动，0-无图，1-1张，3-3张 -->
-            <el-radio :label="-1">单图</el-radio>
+            <el-radio :label="1">单图</el-radio>
             <el-radio :label="3">三图</el-radio>
             <el-radio :label="0">无图</el-radio>
-            <el-radio :label="2">自动</el-radio>
+            <el-radio :label="-1">自动</el-radio>
           </el-radio-group>
         </el-form-item>
+        <!-- 封面组件 -->
+        <!-- 父传子  传递images数据    -->
+        <cover-image :list='formDate.cover.images'></cover-image>
         <el-form-item label="频道" prop="channel_id">
           <el-select v-model="formDate.channel_id">
-            <el-option v-for='item in channels' :key='item.id.toString()' :label="item.name" :value="item.id.toString()"></el-option>
+            <el-option v-for='item in channels' :key='item.id' :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item style="margin-left:50px">
@@ -74,7 +77,6 @@ export default {
   // 监听   $route:function(to,from){if(to.parmas.articleId)}
   watch: {
     $route: function (to, from) {
-      console.log(to.params.articleId)
       if (to.params.articleId) {
         // 存在 则是修改
       } else {
@@ -89,11 +91,8 @@ export default {
           channel_id: null
         }
       }
-    }
-  },
-  methods: {
-    // 点击切换  封面
-    changeType () {
+    },
+    'formDate.cover.type' () {
       if (this.formDate.cover.type === 0 || this.formDate.cover.type === -1) {
         this.formDate.cover.images = [] // 无图或是自动
       } else if (this.formDate.cover.type === 1) {
@@ -101,7 +100,19 @@ export default {
       } else if (this.formDate.cover.type === 3) {
         this.formDate.cover.images = ['', '', ''] // 三张图
       }
-    },
+    }
+  },
+  methods: {
+    // 点击切换  封面
+    // changeType () {
+    //   if (this.formDate.cover.type === 0 || this.formDate.cover.type === -1) {
+    //     this.formDate.cover.images = [] // 无图或是自动
+    //   } else if (this.formDate.cover.type === 1) {
+    //     this.formDate.cover.images = [''] // 一张图
+    //   } else if (this.formDate.cover.type === 3) {
+    //     this.formDate.cover.images = ['', '', ''] // 三张图
+    //   }
+    // },
     // 通过ID获取数据
     getArticleById (articleId) {
       this.loading = true
