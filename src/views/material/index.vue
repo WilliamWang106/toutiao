@@ -72,6 +72,12 @@ export default {
           method: 'delete',
           url: `/user/images/${item.id}`
         }).then(() => {
+          // 提示
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+          // 重新拉去数据
           this.getMaterial()
         })
       })

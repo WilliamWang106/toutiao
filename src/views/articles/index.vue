@@ -129,6 +129,7 @@ export default {
   methods: {
     // 删除文章
     delAriticle (id) {
+      // confim成功后  在.then中取结果
       this.$confirm('你确定要删除么？').then(() => {
         this.$axios({
           url: `/articles/${id}`,
