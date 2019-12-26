@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading='loading'>
       <bread-crumb slot="header">
         <template slot="title">文章发表</template>
       </bread-crumb>
@@ -43,6 +43,7 @@
 export default {
   data () {
     return {
+      loading: false,
       channels: '',
       // 表单数据对象
       formDate: {
@@ -90,9 +91,11 @@ export default {
   methods: {
     // 通过ID获取数据
     getArticleById (articleId) {
+      this.loading = true
       this.$axios({
         url: `/articles/${articleId}`
       }).then(res => {
+        this.loading = false
         this.formDate = res.data
       })
     },
@@ -165,7 +168,7 @@ export default {
     // 获取频道列表数据
     this.getChannel()
     let { articleId } = this.$route.params // 获取动态路由参数
-    this.getArticleById(articleId)
+    articleId && this.getArticleById(articleId)
   },
   computed: {
     editor () {
