@@ -66,7 +66,36 @@ export default {
       }
     }
   },
+  // 解决路由对应同意组件的时候遇见的问题 实例组件不销毁 会复用 但是复用不会触发钩子函数的执行
+  // 解决，监听数据   或是监听每一个的视图  如果变化 去调用一下
+  // 监听   $route:function(to,from){if(to.parmas.articleId)}
+  watch: {
+    $route: function (to, from) {
+      if (to.params.articleId) {
+        // 存在 则是修改
+      } else {
+        // 不存在  则是发布 则重新用原始的表单对象数据
+        this.formDate = {
+          title: '',
+          content: '',
+          cover: {
+            type: 0,
+            images: []
+          },
+          channel_id: null
+        }
+      }
+    }
+  },
   methods: {
+    // 通过ID获取数据
+    getArticleById (articleId) {
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then(res => {
+        this.formDate = res.data
+      })
+    },
     // 获取频道信息
     getChannel () {
       this.$axios({
@@ -99,6 +128,8 @@ export default {
   created () {
     // 获取频道列表数据
     this.getChannel()
+    let { articleId } = this.$route.params
+    this.getArticleById(articleId)
   },
   computed: {
     editor () {

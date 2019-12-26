@@ -48,7 +48,8 @@
               </div>
           </div>
           <div class="right">
-              <span><i class="el-icon-edit"></i>修改</span>
+            <!-- 修改跳转 -->
+              <span @click="toModify(item.id.toString())"><i class="el-icon-edit"></i>修改</span>
               <span @click='delAriticle(item.id.toString())'><i class="el-icon-delete"></i>删除</span>
           </div>
       </div>
@@ -89,9 +90,7 @@ export default {
         this.changeCondition()
       },
       deep: true
-
     }
-
   },
   filters: {
     //   参数Value
@@ -127,6 +126,10 @@ export default {
     }
   },
   methods: {
+    // 跳转到发布页面
+    toModify (id) {
+      this.$router.push(`/home/publish/${id}`)
+    },
     // 删除文章
     delAriticle (id) {
       // confim成功后  在.then中取结果
