@@ -106,21 +106,57 @@ export default {
     },
     publishArticle (draft) {
       this.$refs.publishForm.validate(isOK => {
+        // 校验判断 如果成功     一共四种情况   修改状态下的发表和草稿     发布状态下的发表和草稿
         if (isOK) {
-          // 请求发布文章接口
+          // 判断是否携带ID  如果携带 则为修改 如果不携带  则为发布
+          // 获取动态路由参数
+          let { articleId } = this.$route.params // 获取动态路由参数
           this.$axios({
-            method: 'post',
-            url: '/articles',
+            url: articleId ? `/articles/${articleId}` : '/articles',
+            method: articleId ? 'put' : 'post',
             params: { draft },
             data: this.formDate
           }).then(() => {
-            // 提示成功 跳转页面
             this.$message({
               type: 'success',
               message: '保存成功'
             })
             this.$router.push('/home/articles')
           })
+
+          // ------------------------------------------类似  简写
+          // if (articleId) {
+          //   // 是修改  调用修改接口
+          //   this.$axios({
+          //     method: 'put',
+          //     url: `/articles/${articleId}`,
+          //     params: { draft },
+          //     data: this.formDate
+          //   }).then(() => {
+          //     this.$message({
+          //       type: 'success',
+          //       message: '保存成功'
+          //     })
+          //     this.$router.push('/home/articles')
+          //   })
+          // } else {
+          //   // 是发布
+          //   // 请求发布文章接口
+          //   this.$axios({
+          //     method: 'post',
+          //     url: '/articles',
+          //     params: { draft },
+          //     data: this.formDate
+          //   }).then(() => {
+          //   // 提示成功 跳转页面
+          //     this.$message({
+          //       type: 'success',
+          //       message: '保存成功'
+          //     })
+          //     this.$router.push('/home/articles')
+          //   })
+          // }
+          // ------------------------------------------------
         }
       })
     }
@@ -128,7 +164,7 @@ export default {
   created () {
     // 获取频道列表数据
     this.getChannel()
-    let { articleId } = this.$route.params
+    let { articleId } = this.$route.params // 获取动态路由参数
     this.getArticleById(articleId)
   },
   computed: {
